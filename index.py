@@ -6,5 +6,9 @@ app = Flask(__name__)
 def root():
     return render_template('index.html')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/forms')
+def forms():
+    return render_template('web_form.html')
+
+app.run(debug=True)
+    
