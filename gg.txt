@@ -1,0 +1,70 @@
+Function printMenu {
+    Write-Host "##### Bank Program #####"
+    Write-Host "0. Show Balance"
+    Write-Host "1. Deposit Money"
+    Write-Host "2. Withdraw Money"
+    Write-Host "Type exit to terminate the program"
+    Write-Host " "
+}
+
+Function readInput($question) {
+    return Read-Host $question
+}
+
+Function print($val) {
+    Write-Host $val
+}
+
+Function depositMoney($amount) {
+    If ($amount -le 0) {
+        print("You cannot deposit zero or less dollars")
+        return
+    }
+
+    $oldAmount = [double] (Get-Variable mainBalance -Scope 1).Value
+    Set-Variable mainBalance -Scope 1 -Value ($oldAmount + $amount)
+    print("$amount has been deposited into your account.")
+}
+
+Function withdrawMoney($amount) {
+    If ($amount -le 0) {
+        print("You cannot withdraw zero or less dollars")
+        return
+    }
+
+    $oldAmount = [double] (Get-Variable mainBalance -Scope 1).Value
+
+    If (($oldAmount - $amount) -lt 0) {
+        print("You cannot overdraw your bank account")
+        return
+    }
+
+    Set-Variable mainBalance -Scope 1 -Value ($oldAmount - $amount)
+    print("$amount has been withdrawn from your account.")
+}
+
+#Script Variables
+$line = ""
+$mainBalance = 420
+
+#Print menu initally
+printMenu
+
+while ($line -ne "exit"){
+    $line = readInput("Select option")
+
+    If ($line -eq 0){
+        print("Your balance is: $mainBalance")
+    }
+    ElseIf ($line -eq 1){
+        $amount = [double] (readInput("Enter deposit amount"))
+        depositMoney($amount)
+    }
+    ElseIf ($line -eq 2){
+        $amount = [double] (readInput("Enter withdraw amount"))
+        withdrawMoney($amount)
+    }
+    ElseIf ($line -eq "?"){
+        printMenu
+    }
+}
